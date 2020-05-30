@@ -16,9 +16,14 @@ function verifyImageUrl(url: string): boolean {
   return isURL(url) && /(jpe?g|gif|png|webp|bmp)$/i.test(url);
 }
 
+function generateMessageLink(message: Discord.Message) {
+  if (!message.guild) throw new Error(`guildId missing`);
+  return `https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`;
+}
+
 async function onMessage(message: Discord.Message) {
   if (message.content === PREFIX) {
-    message.react('😄');
+    message.react('🥫');
   }
 }
 
@@ -49,16 +54,19 @@ async function onMessageReactionAdd(
   log(result.url);
 
   const item = result.items[0];
-  const message = 'Use the sauce, Luke';
+  const message = ['✏️ ' + generateMessageLink(reaction.message)];
   switch (typeof item.source) {
     case 'string':
-      await reaction.message.reply([message, item.source]);
+      await reaction.message.channel.send([...message, '🥫 ' + item.source]);
       break;
     case 'object':
-      await reaction.message.reply([message, item.source.url]);
+      await reaction.message.channel.send([
+        ...message,
+        '🥫 ' + item.source.url,
+      ]);
       break;
     default:
-      await reaction.message.reply([message, result.url]);
+      await reaction.message.channel.send([...message, '🥫 ' + result.url]);
   }
 }
 
