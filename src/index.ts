@@ -45,6 +45,7 @@ async function onMessageReactionAdd(
   }
 
   if (user.bot || reaction.me || reaction.emoji.name !== EMOJI) return;
+  log(reaction.message.attachments.first());
   const imageUrl =
     reaction.message.attachments.first()?.url ||
     reaction.message.content.trim();
