@@ -771,10 +771,10 @@ array-unique@^0.3.2:
   resolved "https://registry.yarnpkg.com/array-unique/-/array-unique-0.3.2.tgz#a894b75d4bc4f6cd679ef3244a9fd8f46ae2d428"
   integrity sha1-qJS3XUvE9s1nnvMkSp/Y9Gri1Cg=
 
-ascii2d@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/ascii2d/-/ascii2d-1.1.2.tgz#4608e08cc109cd5158eff627c1b800fc09347877"
-  integrity sha512-EkbaB7IXjqMfnXBNEBOoyxt1up2LN4jO8fDHxlQSou5O48COvuocUEfOSkE4O/rwZPWDyBws6DHd2tdHnRfxzg==
+ascii2d@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/ascii2d/-/ascii2d-1.1.3.tgz#6ae398e65f097bc7f9fb4f35c01df4002fc2ca23"
+  integrity sha512-OSsnVFzR8mKcLozQKzhf2SVcdJgzMKE3Bs8bGxV+97oO9RiRm5SdhDEgNtuQEV681I3a+RAru22RbzAxzkubuQ==
   dependencies:
     bytes "^3.1.0"
     fetch "^1.1.0"

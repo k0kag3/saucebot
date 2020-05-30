@@ -71,6 +71,7 @@ async function onMessageReactionAdd(
     user,
     '✏️ ' + generateMessageLink(reaction.message),
     '🥫 ' + source,
+    result.url,
   ];
   await reaction.message.channel.send(message);
 }
