@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+  bot:
+    build: .
+    restart: always
+    command: yarn start
+    environment:
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+      SAUCE_BOT_PREFIX: ${SAUCE_BOT_PREFIX}
+      SAUCE_BOT_EMOJI: ${SAUCE_BOT_EMOJI}
+      DEBUG: saucebot
