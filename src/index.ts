@@ -13,7 +13,8 @@ const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
 assert(DISCORD_TOKEN, 'DISCORD_TOKEN is missing');
 
 function verifyImageUrl(url: string): boolean {
-  return isURL(url) && /(jpe?g|gif|png|webp|bmp)$/i.test(url);
+  return isURL(url);
+  // && /(jpe?g|gif|png|webp|bmp)$/i.test(url)
 }
 
 function generateMessageLink(message: Discord.Message) {
@@ -54,20 +55,24 @@ async function onMessageReactionAdd(
   log(result.url);
 
   const item = result.items[0];
-  const message = ['✏️ ' + generateMessageLink(reaction.message)];
+  let source;
   switch (typeof item.source) {
     case 'string':
-      await reaction.message.channel.send([...message, '🥫 ' + item.source]);
+      source = item.source;
       break;
     case 'object':
-      await reaction.message.channel.send([
-        ...message,
-        '🥫 ' + item.source.url,
-      ]);
+      source = item.source.url;
       break;
     default:
-      await reaction.message.channel.send([...message, '🥫 ' + result.url]);
+      source = result.url;
   }
+
+  const message = [
+    user,
+    '✏️ ' + generateMessageLink(reaction.message),
+    '🥫 ' + source,
+  ];
+  await reaction.message.channel.send(message);
 }
 
 const client = new Discord.Client();
@@ -94,7 +99,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
   } catch (err) {
     log(err);
     if (err instanceof SilentError) return;
-    await reaction.message.reply(err.message);
+    await reaction.message.channel.send(`${user} ${err.message}`);
   }
 });
 
