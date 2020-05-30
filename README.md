@@ -6,9 +6,11 @@ https://twitter.com/k0kag3/status/1266563357831598080
 
 ## Bot Usage
 
+Put a canned emoji (🥫) on a post to get the source.
+
 ### Remove bot from your server
 
-Just kick them.
+Just kick it.
 
 ## Deploy your own bot
 

@@ -1,5 +1,6 @@
 {
   "name": "saucebot",
+  "description": "Use the sauce, Luke.",
   "version": "1.0.0",
   "author": "kokage <k0kag3.k0kag3+github@gmail.com>",
   "scripts": {
