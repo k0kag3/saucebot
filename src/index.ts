@@ -45,36 +45,87 @@ async function onMessageReactionAdd(
   }
 
   if (user.bot || reaction.me || reaction.emoji.name !== EMOJI) return;
-  log(reaction.message.attachments.first());
-  const imageUrl =
-    reaction.message.attachments.first()?.url ||
-    reaction.message.content.trim();
+
+  let imageUrl: string;
+
+  const attachment = reaction.message.attachments.first();
+  if (attachment) {
+    const {proxyURL, width, height} = attachment;
+    if (!width || !height) {
+      imageUrl = proxyURL;
+    } else {
+      const ratio = height / width;
+      const newWidth = 300;
+      const newHeight = Math.floor(newWidth * ratio);
+      imageUrl = proxyURL + `?width=${newWidth}&height=${newHeight}`;
+    }
+  } else {
+    const url = reaction.message.content.trim();
+    if (!verifyImageUrl(url)) return;
+    imageUrl = url;
+  }
+
   log(imageUrl);
-  if (!verifyImageUrl(imageUrl)) return;
 
   const result = await ascii2d.searchByUrl(imageUrl);
   log(result.url);
 
   const item = result.items[0];
-  let source;
-  switch (typeof item.source) {
-    case 'string':
-      source = item.source;
-      break;
-    case 'object':
-      source = item.source.url;
-      break;
-    default:
-      source = result.url;
+  const embed = new Discord.MessageEmbed();
+  embed.setColor('#db5c5c');
+  embed.setThumbnail(item.thumbnailUrl);
+  if (item.source) {
+    embed.setTitle(item.source.title);
+    embed.setURL(item.source.url);
+    embed.addField('Source', item.source.type);
+    if (item.source.author) {
+      const {name, url} = item.source.author;
+      embed.setAuthor(name, undefined, url);
+    }
+  } else if (item.externalInfo) {
+    const source = item.externalInfo.content;
+    if (typeof source !== 'string') {
+      embed.setTitle(source.title);
+      embed.setURL(source.url);
+      embed.addField('Source', source.type);
+      if (source.author) {
+        const {name, url} = source.author;
+        embed.setAuthor(name, undefined, url);
+      }
+    } else {
+      embed.setDescription(source);
+      embed.addField('Source', item.externalInfo.ref);
+    }
+  } else {
+    embed.addField('Source', 'Unavailable');
   }
-
-  const message = [
-    user,
-    '✏️ ' + generateMessageLink(reaction.message),
-    '🥫 ' + source,
-    result.url,
-  ];
-  await reaction.message.channel.send(message);
+  embed.addFields([
+    {
+      name: 'Dimention',
+      value: `${item.width}x${item.height}`,
+      inline: true,
+    },
+    {
+      name: 'Size',
+      value: `${item.fileSize} bytes`,
+      inline: true,
+    },
+    {
+      name: 'Discord Link',
+      value: `[@${reaction.message.author.username}](${generateMessageLink(
+        reaction.message,
+      )})`,
+      inline: true,
+    },
+    {
+      name: 'All Result',
+      value: `[🚀 Ascii2d](${result.url})`,
+      inline: true,
+    },
+  ]);
+  await reaction.message.channel.send(`Use the sauce, ${user}`);
+  await reaction.message.channel.send(embed);
+  if (embed.url) await reaction.message.channel.send(embed.url);
 }
 
 const client = new Discord.Client();
