@@ -106,21 +106,21 @@ async function onMessageReactionAdd(
     embed.addField('Source', 'Unavailable');
   }
   embed.addFields([
-    {
-      name: 'Dimention',
-      value: `${item.width}x${item.height}`,
-      inline: true,
-    },
-    {
-      name: 'Size',
-      value: bytes(item.fileSize),
-      inline: true,
-    },
-    {
-      name: 'Kind',
-      value: item.fileType,
-      inline: true,
-    },
+    // {
+    //   name: 'Dimention',
+    //   value: `${item.width}x${item.height}`,
+    //   inline: true,
+    // },
+    // {
+    //   name: 'Size',
+    //   value: bytes(item.fileSize),
+    //   inline: true,
+    // },
+    // {
+    //   name: 'Kind',
+    //   value: item.fileType,
+    //   inline: true,
+    // },
     {
       name: 'All Result',
       value: `[ascii2d.net](${result.url})`,
