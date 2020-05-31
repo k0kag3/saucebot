@@ -4,7 +4,7 @@ services:
   bot:
     build: .
     restart: always
-    command: yarn dev
+    command: yarn dev:nodemon
     volumes:
       - ./src:/usr/local/app/src
     environment:

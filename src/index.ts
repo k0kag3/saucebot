@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
 import assert from 'assert';
 import isURL from 'validator/lib/isURL';
+import bytes from 'bytes';
 import * as ascii2d from 'ascii2d';
 
 import {log} from './util';
@@ -51,11 +52,12 @@ async function onMessageReactionAdd(
   const attachment = reaction.message.attachments.first();
   if (attachment) {
     const {proxyURL, width, height} = attachment;
-    if (!width || !height) {
+    const THRESHOLD = 800;
+    if (!width || !height || width < THRESHOLD) {
       imageUrl = proxyURL;
     } else {
       const ratio = height / width;
-      const newWidth = 300;
+      const newWidth = THRESHOLD;
       const newHeight = Math.floor(newWidth * ratio);
       imageUrl = proxyURL + `?width=${newWidth}&height=${newHeight}`;
     }
@@ -72,12 +74,16 @@ async function onMessageReactionAdd(
 
   const item = result.items[0];
   const embed = new Discord.MessageEmbed();
-  embed.setColor('#db5c5c');
+  embed.setColor('#FA7268');
   embed.setThumbnail(item.thumbnailUrl);
+  embed.setFooter(
+    'Guessed by SauceBot',
+    'https://raw.githubusercontent.com/k0kag3/saucebot/master/assets/Icon.png',
+  );
   if (item.source) {
+    embed.addField('Source', item.source.type);
     embed.setTitle(item.source.title);
     embed.setURL(item.source.url);
-    embed.addField('Source', item.source.type);
     if (item.source.author) {
       const {name, url} = item.source.author;
       embed.setAuthor(name, undefined, url);
@@ -85,16 +91,16 @@ async function onMessageReactionAdd(
   } else if (item.externalInfo) {
     const source = item.externalInfo.content;
     if (typeof source !== 'string') {
+      embed.addField('Source', source.type);
       embed.setTitle(source.title);
       embed.setURL(source.url);
-      embed.addField('Source', source.type);
       if (source.author) {
         const {name, url} = source.author;
         embed.setAuthor(name, undefined, url);
       }
     } else {
-      embed.setDescription(source);
       embed.addField('Source', item.externalInfo.ref);
+      embed.setDescription(source);
     }
   } else {
     embed.addField('Source', 'Unavailable');
@@ -107,25 +113,22 @@ async function onMessageReactionAdd(
     },
     {
       name: 'Size',
-      value: `${item.fileSize} bytes`,
+      value: bytes(item.fileSize),
       inline: true,
     },
     {
-      name: 'Discord Link',
-      value: `[@${reaction.message.author.username}](${generateMessageLink(
-        reaction.message,
-      )})`,
+      name: 'Kind',
+      value: item.fileType,
       inline: true,
     },
     {
       name: 'All Result',
-      value: `[🚀 Ascii2d](${result.url})`,
+      value: `[ascii2d.net](${result.url})`,
       inline: true,
     },
   ]);
-  await reaction.message.channel.send(`Use the sauce, ${user}`);
+  await reaction.message.channel.send([`Use the sauce, ${user}`, embed.url]);
   await reaction.message.channel.send(embed);
-  if (embed.url) await reaction.message.channel.send(embed.url);
 }
 
 const client = new Discord.Client();

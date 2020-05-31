@@ -5,8 +5,8 @@
   "author": "kokage <k0kag3.k0kag3+github@gmail.com>",
   "scripts": {
     "build": "tsc",
-    "dev": "nodemon --watch src --exec 'ts-node' src/index.ts",
-    "docker:dev": "docker-compose -f docker-compose.development.yml up --build",
+    "dev": "docker-compose -f docker-compose.development.yml up --build",
+    "dev:nodemon": "nodemon --watch src --exec 'ts-node' src/index.ts",
     "docker:start": "docker-compose up -d --build",
     "docker:stop": "docker-compose down",
     "docker:update": "yarn docker:stop && git pull --rebase && yarn docker:start",
@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "ascii2d": "^3.0.1",
+    "bytes": "^3.1.0",
     "date-fns": "^2.14.0",
     "debug": "^4.1.1",
     "discord.js": "^12.2.0",
@@ -23,6 +24,7 @@
     "validator": "^13.0.0"
   },
   "devDependencies": {
+    "@types/bytes": "^3.1.0",
     "@types/debug": "^4.1.5",
     "@types/jest": "^25.2.3",
     "@types/jsdom": "^16.2.3",
