@@ -1,10 +1,9 @@
-version: '3.1'
+version: "3.1"
 
 services:
   bot:
     build: .
-    restart: always
-    command: yarn start
+    restart: unless-stopped
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
       SAUCE_BOT_PREFIX: ${SAUCE_BOT_PREFIX}
